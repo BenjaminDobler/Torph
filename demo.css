@@ -1,0 +1,79 @@
+
+
+
+.bd-page-container {
+    position: absolute;
+    left: 0;
+    width: 700px;
+    top: 0;
+    height: 500px;
+    background: #888888;
+    overflow: hidden;
+}
+
+.bd-page {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border: 1px solid;
+    visibility: hidden;
+}
+
+
+.circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    background: #ff00ff;
+}
+
+
+.square {
+    width: 200px;
+    height: 100px;
+    background: #0000ff;
+}
+
+.animate {
+    transition: all 0.8s;
+}
+
+
+
+
+
+/* Demo stuff */
+
+.album-list {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 100px;
+   width: 310px; 
+}
+
+.album {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    background: #ffffff;
+}
+
+.user-image {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+}
+.user-list {
+    width: 200px;
+ list-style: none;
+}
+
+.user-list li{
+ padding: 5px;
+    background: #ff00ff;
+    border-bottom: 1px solid;
+}
