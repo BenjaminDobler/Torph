@@ -181,7 +181,9 @@ Torph.prototype.animatePages = function (fromPageIndex, toPageIndex) {
         
         var stylesToApplyToTarget = animationTargets.fromElement.getAttribute('data-animation-copy-style');
         if (stylesToApplyToTarget) {
+            var bgSize = animationTargets.fromElement.style['background-size'];
             animationTargets.toElement.style[stylesToApplyToTarget] = animationTargets.fromElement.style[stylesToApplyToTarget];
+            animationTargets.toElement.style['background-size'] = bgSize;
         }
         
         var targetClone = animationTargets.fromElement.cloneNode(true);
@@ -209,6 +211,7 @@ Torph.prototype.animatePages = function (fromPageIndex, toPageIndex) {
         destinationClone.style.left = animationTargets.fromElement.offsetLeft + "px";
         destinationClone.style.top = animationTargets.fromElement.offsetTop + "px";
         destinationClone.style["border-radius"] = fromComputedStyles["border-radius"];
+        
     
         
         
