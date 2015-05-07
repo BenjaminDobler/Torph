@@ -1,0 +1,35 @@
+
+
+    
+.bd-page-container {
+    position: relative;
+    width: 700px;
+    height: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.bd-page {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border: 1px solid;
+    visibility: hidden;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

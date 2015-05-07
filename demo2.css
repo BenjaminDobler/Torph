@@ -1,0 +1,41 @@
+/* Demo 2 */
+
+
+
+body{
+    font-family: 'Raleway', Arial, sans-serif;
+    background: #000000;
+}
+    
+
+.header {
+    width: 100%;
+    height: 50px;
+    background: #999999;   
+}
+
+
+.album-list{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+
+.album-list li{
+    height: 60px;
+    line-height: 60px;
+    border-bottom: 1px solid #999999;
+}
+
+.album-list img{
+ float:left;
+    margin-right:5px;
+    margin-top:5px;
+    margin-left:5px   
+}
+
+.album-detail-header{
+    line-height: 60px;   
+}
