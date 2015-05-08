@@ -16,6 +16,7 @@ var copyComputedStyle = function (src, dest) {
         if (typeof i == "string" && i != "cssText" && !/\d/.test(i)) {
             // The try is for setter only properties
             try {
+                if(i.indexOf('webkit')==-1) {
                 dest.style[i] = s[i];
                 // `fontSize` comes before `font` If `font` is empty, `fontSize` gets
                 // overwritten.  So make sure to reset this property. (hackyhackhack)
@@ -26,6 +27,7 @@ var copyComputedStyle = function (src, dest) {
 
                 if (i === "height") {
                     console.warn(s[i]);
+                }
                 }
             } catch (e) {}
         }
@@ -300,7 +302,7 @@ Torph.prototype.animatePages = function (fromPageIndex, toPageIndex) {
         var delay = value.getAttribute('data-animation-in-delay') || 0;
 
         if (type === "fadeIn") {
-            var tween = self.transitionTimeline.fromTo(value, 0.8, {
+            var tween = self.transitionTimeline.fromTo(value, 0.3, {
                 opacity: 0
             }, {
                 opacity: 1
@@ -308,7 +310,7 @@ Torph.prototype.animatePages = function (fromPageIndex, toPageIndex) {
             tween.target = value;
             self.tweensToReset.push(tween);
         } else if(type === "moveDown") {
-            var tween = self.transitionTimeline.fromTo(value, 0.3, {
+            var tween = self.transitionTimeline.fromTo(value, delay, {
                 yPercent: -100,
                 opacity: 1
             }, 
@@ -465,8 +467,8 @@ Torph.prototype.morph = function (fromNode, toNode) {
     var fromClone = fromNode.cloneNode(true);
     var toClone = toNode.cloneNode(true);
 
-    //copyComputedStyle(fromNode, targetClone);
-    //copyComputedStyle(toNode, toClone);
+    copyComputedStyle(fromNode, fromClone);
+    copyComputedStyle(toNode, toClone);
 
     var toComputedStyles = window.getComputedStyle(toNode);
     var fromComputedStyles = window.getComputedStyle(fromNode);
@@ -481,7 +483,7 @@ Torph.prototype.morph = function (fromNode, toNode) {
     //fromClone.style.height = fromComputedStyles["height"];
     fromClone.style.left = fromNode.offsetLeft + "px";
     fromClone.style.top = fromNode.offsetTop + "px";
-    fromClone.style['list-style-type'] = fromComputedStyles["list-style-type"];
+    //fromClone.style['list-style-type'] = fromComputedStyles["list-style-type"];
 
 
     toClone.style.margin = "0";
@@ -492,7 +494,7 @@ Torph.prototype.morph = function (fromNode, toNode) {
     //toClone.style.height = fromComputedStyles["height"];
     toClone.style.left = toNode.offsetLeft + "px";
     toClone.style.top = toNode.offsetTop + "px";
-    toClone.style['list-style-type'] = toComputedStyles["list-style-type"];
+    //toClone.style['list-style-type'] = toComputedStyles["list-style-type"];
     //toClone.style["border-radius"] = fromComputedStyles["border-radius"];
 
 
@@ -587,8 +589,10 @@ Torph.prototype.morph = function (fromNode, toNode) {
 
     var delay = fromNode.getAttribute('data-animation-delay') || 0;
     console.warn("Delay " + delay);
-    self.transitionTimeline.to(toClone, 0.8, destinationProperties, 0);
-    self.transitionTimeline.to(fromClone, 0.8, properties, 0);
+    self.transitionTimeline.to(toClone, 0.5, destinationProperties, 0);
+    self.transitionTimeline.to(fromClone, 0.5, properties, 0);
+        //self.transitionTimeline.pause();
+
 
 
 }

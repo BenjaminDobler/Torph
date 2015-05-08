@@ -1,0 +1,64 @@
+/* Demo 2 */
+
+
+
+body{
+    font-family: 'Raleway', Arial, sans-serif;
+    background: #000000;
+}
+    
+
+.header {
+    width: 100%;
+    height: 50px;
+    background: #999999;   
+}
+
+
+.bd-page{
+    border: none;   
+}
+
+.album-list{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+
+.album-list li{
+    height: 60px;
+    line-height: 60px;
+    border-bottom: 1px solid #999999;
+}
+
+.player-image{
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    
+    width: 400px;
+    height: 400px;
+    z-index: 100;
+    
+}
+
+.play-btn{
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);   
+}
+.player-image img{
+    width:100%;
+    height: 100%;
+}
+
+.album-list img{
+ float:left;
+    width: 200px;
+    height: 200px; 
+}
+
+.album-detail-header{
+    line-height: 60px;   
+}

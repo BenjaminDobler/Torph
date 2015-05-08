@@ -39,6 +39,7 @@ forEach(albums, function (index, album) {
         });
         evt.currentTarget.setAttribute('data-animation-id','user-image');
         console.log("BG",evt.currentTarget.style.background);
+        document.querySelector('.top-bg').style.background = evt.currentTarget.style.background;
         forward();
     });
 });
