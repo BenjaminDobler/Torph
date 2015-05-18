@@ -16,42 +16,48 @@
 <body>
 
 
+    <input id="debug-check" onchange="onDebugCheckChanged()" type="checkbox">
+    <input id="playhead" style="width:300px" oninput="onPlayheadChange()" type=range id=weight min=0 value=0 max=100 step=1>
+
+
 
     <div class="bd-page-container" style="width:400px;height:600px">
 
 
-        <div class="bd-page" data-index="0" style="visibility:visible" data-transition-type="move-left-right" data-transition-duration="0">
-            <div class="header" data-animation-out="moveUp" data-animation-in="moveDown">
+        <div class="bd-page" data-index="0" style="visibility:visible" data-animation-easing="Back.easeOut" data-transition-duration="0">
+            <staggergroup data-animation-name="albums" data-animation-type="fall-down"></staggergroup>
+
+            <div class="header" data-animation-id="header-bg" data-animation-easing="Back.easeOut" data-animation-delay="0.5">
 
             </div>
             <ul class="album-list">
                 <li data-animation-stagger-group="albums">
-                    <img src="images/backspacer.jpg" width="50px" style="float:left;margin-right:5px;margin-top:5px;margin-left:5px">
-                    <span>Backspacer</span>
+                    <img src="images/backspacer.jpg" width="50px">
+                    <div class="content">Backspacer</div>
                 </li>
                 <li data-animation-stagger-group="albums">
-                    <img src="images/yield.jpg" width="50px" style="margin-top:5px;margin-left:5px">
-                    <span>Yield</span>
+                    <img src="images/yield.jpg" width="50px">
+                    <div class="content">Yield</div>
                 </li>
                 <li data-animation-stagger-group="albums">
-                    <img src="images/pearljam.jpg" width="50px" style="margin-top:5px;margin-left:5px">
-                    <span>Pearl Jam</span>
-                </li>
-                <li data-animation-stagger-group="albums" style="background:#00ff00">
-                    <img src="images/binaural.jpg" width="50px" style="margin-top:5px;margin-left:5px">
-                    <span>Binaural</span>
+                    <img src="images/pearljam.jpg" width="50px">
+                    <div class="content">Pearl Jam</div>
                 </li>
                 <li data-animation-stagger-group="albums">
-                    <img src="images/lightningbolt.jpg" width="50px" style="margin-top:5px;margin-left:5px">
-                    <span>Lightning Bolt</span>
+                    <img src="images/binaural.jpg" width="50px">
+                    <div class="content">Binaural</div>
                 </li>
                 <li data-animation-stagger-group="albums">
-                    <img src="images/nocode.jpg" width="50px" style="margin-top:5px;margin-left:5px">
-                    <span>No Code</span>
+                    <img src="images/lightningbolt.jpg" width="50px">
+                    <div class="content">Lightning Bolt</div>
                 </li>
                 <li data-animation-stagger-group="albums">
-                    <img src="images/riotact.jpg" width="50px" style="margin-top:5px;margin-left:5px">
-                    <span>Riot Act</span>
+                    <img src="images/nocode.jpg" width="50px">
+                    <div class="content">No Code</div>
+                </li>
+                <li data-animation-stagger-group="albums">
+                    <img src="images/riotact.jpg" width="50px">
+                    <div class="content">Riot Act</div>
                 </li>
             </ul>
 
@@ -60,9 +66,11 @@
 
         <div class="bd-page" data-index="1" data-animation-easing="Back.easeOut" data-transition-type="move-left-right" data-transition-duration="0">
             <div>
-                <div class="album-detail-header">
-                    <img src="images/riotact.jpg" width="80px" style="float:left;margin-right:5px;margin-top:5px;margin-left:5px">
-                    <span>Riot Act</span>
+                <div class="detail-header-bg" data-animation-delay="0" data-animation-id="header-bg" style="position:absolute;top:0;left:0;right:0;height:250px;background: #b71c1c">
+
+                </div>
+                <div class="album-detail-header" style="position:absolute">
+                    <img src="images/riotact.jpg" width="200px" style="float:left;margin-right:5px;margin-top:15px;margin-left:100px;border-radius:100px">
                 </div>
             </div>
         </div>

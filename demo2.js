@@ -4,9 +4,29 @@
 
 
 var torph1 = new Torph(document.querySelector('.bd-page-container'));
+var recordTween;
+var img = document.querySelector('.album-detail-header img');
+torph1.on("onTransitionDone", function (fromIndex, toIndex, fromPage, toPage) {
+    console.warn("Transition Done ", toIndex);
+    
+    
+    if (toIndex === 1) {
+    recordTween = TweenMax.fromTo(img, 5, {rotation:0}, {rotation: 360, repeat: -1, ease:Linear.easeNone});
+    }
+});
 
 
 
+function onPlayheadChange() {
+    var val = document.querySelector('#playhead').value / 100;
+    torph1.transitionTimeline.progress(val);
+}
+
+function onDebugCheckChanged() {
+    var checked = document.querySelector('#debug-check').checked;
+    torph1.pauseOnTransitionStart = checked;
+    //alert(checked);
+}
     
 
 
@@ -29,42 +49,32 @@ var forEach = function (array, callback, scope) {
 
 
 document.querySelector('.album-detail-header').addEventListener('click', function () {
+    recordTween.kill();
+    TweenMax.set(img, {rotation:0});
     backward();
 });
 
 
 var albums = document.querySelectorAll('.album-list li');
 var albumImages = document.querySelectorAll('.album-list li img');
-var albumTitles = document.querySelectorAll('.album-list li span');
+//var albumTitles = document.querySelectorAll('.album-list li span');
 
 forEach(albums, function (index, album) {
-    console.log(album);
     album.addEventListener('click', function (evt) {
+        
+        
         
         forEach(albumImages, function (index, album) {
             album.removeAttribute('data-animation-id');
         });
-        
-        
-        forEach(albumTitles, function (index, album) {
-            album.removeAttribute('data-animation-id');
-        });
-        
-        evt.currentTarget.querySelector('img').setAttribute('data-animation-id','header-img');
-        evt.currentTarget.querySelector('span').setAttribute('data-animation-id','header-title');
-        
+        var img = evt.currentTarget.querySelector('img');
+        img.setAttribute('data-animation-id','header-img');
+        img.setAttribute('data-animation-easing','Back.easeInOut');
+        img.setAttribute('data-animation-duration','1');
         document.querySelector('.album-detail-header img').setAttribute('data-animation-id','header-img');
-        document.querySelector('.album-detail-header span').setAttribute('data-animation-id','header-title');
-        
-        
-        //evt.currentTarget.querySelector('span').setAttribute('data-animation-id','header-txt');
-        //document.querySelector('.album-detail-header span').setAttribute('data-animation-id','header-txt');
-        
-        
-        var src = evt.currentTarget.querySelector('img').getAttribute('src');
+       
+        var src = img.getAttribute('src');
         document.querySelector('.album-detail-header img').setAttribute('src',src);
-        //evt.currentTarget.setAttribute('data-animation-id','user-image');
-        
         forward();
         
         
