@@ -87,9 +87,6 @@ window.Torph = (function () {
                             dest.style.fontSize = s.fontSize;
                         }
 
-                        if (i === "height") {
-                            console.warn(s[i]);
-                        }
                     }
                 } catch (e) {}
             }
@@ -296,17 +293,14 @@ window.Torph = (function () {
 
 
         var onTransitionDone = function () {
-            console.log("On Transition Done");
             fromPage.style.visibility = "hidden";
             itemsToReset.forEach(function (item) {
                 //TweenMax.set(item, {clearProps:"all"});
             });
 
             self.toPageTransitionDone = true;
-            console.log("All Done");
             for (var i = 0; i < self.cleanUpAfterToPageDone.length; i++) {
                 var data = self.cleanUpAfterToPageDone[i];
-                console.log("Clean at end");
                 cleanupElementTranisiton(data);
             }
 
@@ -379,16 +373,10 @@ window.Torph = (function () {
 
 
 
-        console.log("Props", toPageTransitionProperties);
-
-        console.log(toTransitionDuration + "   " + fromTransitionDuration);
-
-
 
         if (toTransitionDuration === 0 || toTransitionDuration === "0") {
             TweenMax.set(toPage, toPageTransitionProperties.toPageEndValues);
         } else {
-            console.warn("To Page ", toPageTransitionProperties);
             this.transitionTimeline.fromTo(toPage, toTransitionDuration, toPageTransitionProperties.toPageStartValues, toPageTransitionProperties.toPageEndValues, toPageDelay);
 
         }
@@ -396,7 +384,6 @@ window.Torph = (function () {
         if (fromTransitionDuration === 0 || fromTransitionDuration === "0") {
             //TweenMax.set(fromPage, fromPageTransitionProperties.fromPageEndValues)
         } else {
-            console.warn("From Page ", fromPageTransitionProperties);
             this.transitionTimeline.fromTo(fromPage, fromTransitionDuration, fromPageTransitionProperties.fromPageStartValues, fromPageTransitionProperties.fromPageEndValues, fromPageDelay);
 
         }
@@ -427,7 +414,6 @@ window.Torph = (function () {
                     yPercent: -100,
                     opacity: 1
                 }, delay);
-                console.log("MOVE TWEEN ", tween);
                 tween.target = value;
                 self.tweensToReset.push(tween);
             }
@@ -488,7 +474,6 @@ window.Torph = (function () {
             var zoomTargetId = element.getAttribute('data-zoom-target');
             var zoomTarget = toPage.querySelector('#' + zoomTargetId);
             if (zoomTarget) {
-                console.log("Zoom From To");
                 self.zoomFromTo(element, zoomTarget);
             }
         });
@@ -593,18 +578,15 @@ window.Torph = (function () {
         var self = this;
         var fromClone = fromNode.cloneNode(true);
         var toClone = toNode.cloneNode(true);
-        console.log("Zoom To");
 
         copyComputedStyle(fromNode, fromClone);
         copyComputedStyle(toNode, toClone);
         var boundingBox = fromNode.getBoundingClientRect();
-        console.log("Bounding", boundingBox);
         fromClone.style.margin = "0";
         fromClone.style.padding = "0";
         fromClone.style.position = "absolute";
         fromClone.style.left = boundingBox.left + "px";
         fromClone.style.top = boundingBox.top + "px";
-        //alert(fromNode.offsetLeft);
 
         fromNode.style.visibility = "hidden";
         toNode.style.visibility = "hidden";
@@ -624,7 +606,6 @@ window.Torph = (function () {
         }
 
         var onComplete = function (target, fromElement, toElement) {
-            console.log("Item animation complete");
             var data = {
                 fromElement: fromElement,
                 toElement: toElement,
@@ -639,7 +620,6 @@ window.Torph = (function () {
 
         var xRatio = destinationBoundingBox.width / boundingBox.width;
         var yRatio = destinationBoundingBox.height / boundingBox.height;
-        console.log(destinationBoundingBox);
         var finalProperties = {
             scaleX: destinationBoundingBox.width / (boundingBox.width),
             scaleY: destinationBoundingBox.height / (boundingBox.height),
@@ -674,12 +654,10 @@ window.Torph = (function () {
         var toComputedStyles = window.getComputedStyle(toNode);
         var fromComputedStyles = window.getComputedStyle(fromNode);
 
-        console.log("Computed Border ", fromComputedStyles["border-radius"]);
         // Set initial position of the clone
 
         var fromNodeBoundingBox = getBoundingClientRectRelativeTo(fromNode, this.fromPage);
         var toNodeBoundingBox = getBoundingClientRectRelativeTo(toNode, this.toPage);
-        console.log("From Box", fromNodeBoundingBox);
 
         fromClone.style.margin = "0";
         fromClone.style.padding = "0";
@@ -726,7 +704,6 @@ window.Torph = (function () {
 
 
         var onComplete = function (target, fromElement, toElement) {
-            console.log("Item animation complete");
             var data = {
                 fromElement: fromElement,
                 toElement: toElement,
@@ -783,7 +760,6 @@ window.Torph = (function () {
             onCompleteParams: [fromClone, fromNode, toNode]
         }
 
-        console.warn(properties.scaleX + "   " + properties.scaleY);
 
         var destinationProperties = {
             x: 0,
@@ -806,7 +782,6 @@ window.Torph = (function () {
         var duration = fromNode.getAttribute('data-animation-duration') || 0.5;
 
         var delay = fromNode.getAttribute('data-animation-delay') || 0;
-        console.warn("Delay " + delay);
         self.transitionTimeline.to(toClone, duration, destinationProperties, delay);
         self.transitionTimeline.to(fromClone, duration, properties, delay);
         if (this.pauseOnTransitionStart) {
