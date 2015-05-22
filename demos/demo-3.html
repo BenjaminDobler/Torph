@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torph Demo 3</title>
+
+    <link rel="stylesheet" href="../torph.css">
+    <link rel="stylesheet" href="demo-3.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/TweenMax.min.js"></script>
+    <script src="../torph.js"></script>
+</head>
+
+<body>
+
+    <div class="torph-container" style="width:400px;height:600px">
+
+        <!--PAGE 1 -->
+        <div class="torph-page" data-index="0" style="visibility:visible" data-transition-type="move-left-right" data-transition-duration="0">
+            <div class="album-list">
+                <img src="images/christina.jpg">
+                <img src="images/ellie.jpg">
+                <img src="images/foster.jpg">
+                <img src="images/keane.jpg">
+                <img src="images/kodaline.jpg">
+                <img src="images/pinkrobots.jpg">
+            </div>
+        </div>
+
+        <!--PAGE 2 -->
+        <div class="torph-page" data-index="1" data-animation-easing="Back.easeOut" data-transition-type="move-left-right" data-transition-duration="0">
+            <div class="player-image">
+                <img src="images/ellie.jpg">
+                <div class="play-btn" style="position:absolute;top:375px;right:20px;width:50px;height:50px;border-radius:100%;background-color:#2B7267 "><i class="fa fa-pause"></i>
+                </div>
+
+            </div>
+
+            <div style="position:absolute;top:400px;left:0;right:0;height:120px;background:#254258" data-animation-out="fadeOut" data-animation-in="fadeIn"></div>
+            <div style="position:absolute;top:520px;left:0;right:0;height:80px;background:#E7E6E7 " data-animation-out="fadeOut" data-animation-in="fadeIn"></div>
+        </div>
+
+    </div>
+
+    <script src="demo-3.js"></script>
+</body>
+
+</html>

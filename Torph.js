@@ -72,14 +72,36 @@ window.Torph = (function () {
     };
 
     var copyComputedStyle = function (src, dest) {
+        //dest.style.cssText = document.defaultView.getComputedStyle(src, "").cssText;
+        //return;
         var s = realStyle(src);
+        //var unsortedStyles = [];
+        var prefixedStyles = [];
+        var unprefixedStyle = [];
+
         for (var i in s) {
             // Do not use `hasOwnProperty`, nothing will get copied
             if (typeof i == "string" && i != "cssText" && !/\d/.test(i)) {
                 // The try is for setter only properties
                 try {
-                    if (i.indexOf('webkit') == -1) {
-                        dest.style[i] = s[i];
+
+                    //if (i.indexOf('webkit') == -1) {
+                    //console.log(i+"   "+s[i])
+                    if (i.toLowerCase().indexOf('webkit') === 0) {
+                        prefixedStyles.push({
+                            name: i,
+                            value: s[i]
+                        });
+                    } else {
+                        unprefixedStyle.push({
+                            name: i,
+                            value: s[i]
+                        });
+                    }
+                    dest.style[i] = "";
+                    //unsortedStyles.push({name:i, value: s[i]});
+                    /*    
+                    dest.style[i] = s[i];
                         // `fontSize` comes before `font` If `font` is empty, `fontSize` gets
                         // overwritten.  So make sure to reset this property. (hackyhackhack)
                         // Other properties may need similar treatment
@@ -87,10 +109,32 @@ window.Torph = (function () {
                             dest.style.fontSize = s.fontSize;
                         }
 
-                    }
+                    //}
+                    */
                 } catch (e) {}
             }
         }
+
+
+        for (var i = 0; i < prefixedStyles.length; i++) {
+            var s = prefixedStyles[i];
+            //console.log(s.name);
+            if (s.name.toLowerCase().indexOf("margin") == -1) {
+                dest.style[s.name] = s.value;
+            }
+        }
+
+
+        for (var i = 0; i < unprefixedStyle.length; i++) {
+            var s = unprefixedStyle[i];
+            //console.log(s.name.indexOf("margin"));
+            dest.style[s.name] = s.value;
+        }
+
+
+
+
+
     };
 
 
@@ -121,6 +165,24 @@ window.Torph = (function () {
 
 
     function getBoundingClientRectRelativeTo(element, container) {
+        /*
+        var top = 0;
+        var left = 0;
+        
+        while(element.parentNode!=container) {
+            top+=element.offsetTop;
+            left+=element.offsetLeft;
+            element = element.parentNode;
+        }
+        
+        return {
+            left: left,
+            top: top,
+            width: element.offsetWidth,
+            height: element.offsetHeight
+        }
+        */
+
         var elementBox = element.getBoundingClientRect();
         var containerBox = container.getBoundingClientRect();
         return {
@@ -129,6 +191,7 @@ window.Torph = (function () {
             width: elementBox.width,
             height: elementBox.height
         }
+
     }
 
 
@@ -249,8 +312,8 @@ window.Torph = (function () {
     }
 
     Torph.prototype.animatePages = function (fromPageIndex, toPageIndex) {
-        
-        
+
+
         if (!this.toPageTransitionDone) {
             return;
         }
@@ -280,13 +343,13 @@ window.Torph = (function () {
 
 
         var elementAnimations = [];
-        var fromPage = document.querySelector(".bd-page[data-index='" + fromPageIndex + "']");
-        var toPage = document.querySelector(".bd-page[data-index='" + toPageIndex + "']");
+        var fromPage = document.querySelector(".torph-page[data-index='" + fromPageIndex + "']");
+        var toPage = document.querySelector(".torph-page[data-index='" + toPageIndex + "']");
         this.fromPage = fromPage;
         this.toPage = toPage;
         this.fromPageBoundingBox = this.fromPage.getBoundingClientRect();
         this.toPageBoundingBox = this.toPage.getBoundingClientRect();
-        
+
         var fromIndex = Number(fromPage.getAttribute('data-index'));
         var toIndex = Number(toPage.getAttribute('data-index'));
 
@@ -314,7 +377,7 @@ window.Torph = (function () {
                     clearProps: "opacity,transform"
                 });
             }
-            
+
             self.trigger("onTransitionDone", fromIndex, toIndex, self.fromPage, self.toPage);
         }
 
@@ -581,7 +644,8 @@ window.Torph = (function () {
 
         copyComputedStyle(fromNode, fromClone);
         copyComputedStyle(toNode, toClone);
-        var boundingBox = fromNode.getBoundingClientRect();
+        var boundingBox = getBoundingClientRectRelativeTo(fromNode, this.fromPage); //fromNode.getBoundingClientRect();
+
         fromClone.style.margin = "0";
         fromClone.style.padding = "0";
         fromClone.style.position = "absolute";
@@ -590,6 +654,7 @@ window.Torph = (function () {
 
         fromNode.style.visibility = "hidden";
         toNode.style.visibility = "hidden";
+        fromClone.style["-webkit-transformOrigin"] = "0% 0%";
         fromClone.style.transformOrigin = "0% 0%";
         this.container.appendChild(fromClone);
 
@@ -628,7 +693,6 @@ window.Torph = (function () {
             onComplete: onComplete,
             onCompleteParams: [fromClone, fromNode, toNode]
         }
-
         this.transitionTimeline.to(fromClone, 0.2, destinationProperties, 0);
         this.transitionTimeline.to(fromClone, 0.8, finalProperties, 0.3);
 
@@ -658,6 +722,8 @@ window.Torph = (function () {
 
         var fromNodeBoundingBox = getBoundingClientRectRelativeTo(fromNode, this.fromPage);
         var toNodeBoundingBox = getBoundingClientRectRelativeTo(toNode, this.toPage);
+
+        console.log(fromNodeBoundingBox.left + "    " + toNodeBoundingBox.left);
 
         fromClone.style.margin = "0";
         fromClone.style.padding = "0";
@@ -725,6 +791,7 @@ window.Torph = (function () {
         var fromHeight = parseInt(fromComputedStyles["height"]);
 
 
+        fromClone.style["-webkit-transformOrigin"] = "0% 0%";
         fromClone.style.transformOrigin = "0% 0%";
 
         // Because the source object is scaled we also need to scale the radius!
@@ -748,12 +815,13 @@ window.Torph = (function () {
             'border-radius': destinationRadius2 + "px" //fromComputedStyles["border-radius"]
         });
 
+        console.log("X " + Number(toNodeBoundingBox.top - fromNodeBoundingBox.top));
         var properties = {
             x: toNodeBoundingBox.left - fromNodeBoundingBox.left,
             y: toNodeBoundingBox.top - fromNodeBoundingBox.top,
             scaleX: toWidth / fromWidth,
             scaleY: toHeight / fromHeight,
-            'border-radius': destinationRadius + "px", //toComputedStyles["border-radius"],
+            borderRadius: destinationRadius + "px", //toComputedStyles["border-radius"],
 
             opacity: 0,
             onComplete: onComplete,
@@ -761,12 +829,17 @@ window.Torph = (function () {
         }
 
 
+        console.log("To Styles", toComputedStyles);
+        var toBorderRadius = toComputedStyles["border-radius"];
+        var borderLeft = toComputedStyles["border-bottom-left-radius"];
+        console.log("Border Radius " + toBorderRadius + "   " + borderLeft);
+
         var destinationProperties = {
             x: 0,
             y: 0,
             scaleX: 1,
             scaleY: 1,
-            'border-radius': toComputedStyles["border-radius"],
+            borderRadius: toComputedStyles["border-radius"],
             opacity: 1,
             onComplete: onComplete,
             onCompleteParams: [toClone, fromNode, toNode]
@@ -789,7 +862,7 @@ window.Torph = (function () {
         }
 
     }
-    
+
     MicroEvent.mixin(Torph);
 
     return Torph;

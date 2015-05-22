@@ -6,22 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Torph Demo 1</title>
 
-    <link rel="stylesheet" href="torph.css">
-    <link rel="stylesheet" href="demo.css">
+    <link rel="stylesheet" href="../torph.css">
+    <link rel="stylesheet" href="demo-1.css">
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/TweenMax.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/plugins/CSSRulePlugin.min.js"></script>
-    <script src="Torph.js"></script>
+    <script src="../torph.js"></script>
 </head>
 
 <body>
 
 
 
-    <div class="bd-page-container">
+    <div class="torph-container">
 
-
-        <div class="bd-page" data-index="0" style="visibility:visible" data-animation-easing="Back.easeOut" data-animation-delay="1">
+        <!--PAGE 1 -->
+        <div class="torph-page" data-index="0" style="visibility:visible" data-animation-easing="Back.easeOut" data-animation-delay="1">
             <staggergroup data-animation-name="albums" data-animation-type="fall-down"></staggergroup>
 
             <h1 style="text-align:center">Pearl Jam Albums</h1>
@@ -39,9 +39,9 @@
 
         </div>
 
-        <div class="bd-page" data-index="1" data-animation-easing="Back.easeOut">
+        <!--PAGE 2 -->
+        <div class="torph-page" data-index="1" data-animation-easing="Back.easeOut">
             <div style="position:absolute;left:0px;top:0px;height:240px;right:0px;background:#444444" data-animation-out="type:fadeOut" data-animation-in="type:fadeIn;delay:1"></div>
-
             <div class="top-bg" style="background:url('images/backspacer.jpg');position:absolute;left:20px;top:20px;height:200px;width:200px;background-size:100% 100%;" data-animation-id="user-image"></div>
         </div>
 
@@ -57,7 +57,7 @@
 
 
 
-    <script src="demo.js"></script>
+    <script src="demo-1.js"></script>
 </body>
 
 </html>
