@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="demo-2.css">
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/TweenMax.min.js"></script>
+    <script src="../TweenMax.min.js"></script>
     <script src="../torph.js"></script>
 </head>
 
@@ -65,6 +66,8 @@
         </div>
 
         <div class="torph-page" data-index="1" data-animation-easing="Back.easeOut" data-transition-type="move-left-right" data-transition-duration="0">
+            <staggergroup data-animation-name="songs" data-animation-type="scale"></staggergroup>
+
             <div>
                 <div class="detail-header-bg" data-animation-delay="0" data-animation-id="header-bg" style="position:absolute;top:0;left:0;right:0;height:250px;background: #b71c1c">
 
@@ -73,6 +76,18 @@
                     <img src="images/riotact.jpg" width="200px" style="float:left;margin-right:5px;margin-top:15px;margin-left:100px;border-radius:100px">
                 </div>
             </div>
+            <ul style="position:absolute;top:250px" >
+                <li data-animation-stagger-group="songs" style="-webkit-backface-visibility: hidden;">Song 1</li>
+                <li data-animation-stagger-group="songs" style="-webkit-backface-visibility: hidden;">Song 1</li>
+                <li data-animation-stagger-group="songs" style="-webkit-backface-visibility: hidden;">Song 1</li>
+                <li data-animation-stagger-group="songs" style="-webkit-backface-visibility: hidden;">Song 1</li>
+                <li data-animation-stagger-group="songs" style="-webkit-backface-visibility: hidden;">Song 1</li>
+                <li data-animation-stagger-group="songs" style="-webkit-backface-visibility: hidden;">Song 1</li>
+                <li data-animation-stagger-group="songs" style="-webkit-backface-visibility: hidden;">Song 1</li>
+                <li data-animation-stagger-group="songs" style="-webkit-backface-visibility: hidden;">Song 1</li>
+                <li data-animation-stagger-group="songs" style="-webkit-backface-visibility: hidden;">Song 1</li>
+            </ul>
+            
         </div>
 
 

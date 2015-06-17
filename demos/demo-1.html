@@ -21,7 +21,11 @@
     <div class="torph-container">
 
         <!--PAGE 1 -->
-        <div class="torph-page" data-index="0" style="visibility:visible" data-animation-easing="Back.easeOut" data-animation-delay="1">
+        <div class="torph-page" style="visibility:visible"
+             data-index="0" 
+             data-animation-page = "move-horizontal"
+             data-animation-properties = "ease:Back.easeOut;delay:0;duration:0.8">
+            
             <staggergroup data-animation-name="albums" data-animation-type="fall-down"></staggergroup>
 
             <h1 style="text-align:center">Pearl Jam Albums</h1>
@@ -40,7 +44,11 @@
         </div>
 
         <!--PAGE 2 -->
-        <div class="torph-page" data-index="1" data-animation-easing="Back.easeOut">
+        <div class="torph-page" 
+             data-index="1" 
+             data-animation-page = "move-horizontal" 
+             data-animation-properties = "ease:Back.easeOut;delay:0;duration:0.8">
+            
             <div style="position:absolute;left:0px;top:0px;height:240px;right:0px;background:#444444" data-animation-out="type:fadeOut" data-animation-in="type:fadeIn;delay:1"></div>
             <div class="top-bg" style="background:url('images/backspacer.jpg');position:absolute;left:20px;top:20px;height:200px;width:200px;background-size:100% 100%;" data-animation-id="user-image"></div>
         </div>

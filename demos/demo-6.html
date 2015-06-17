@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torph Demo 2</title>
+
+    <link rel="stylesheet" href="../torph.css">
+    <link rel="stylesheet" href="demo-6.css">
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/TweenMax.min.js"></script>
+    <script src="../TweenMax.min.js"></script>
+    <script src="../torph.js"></script>
+</head>
+
+<body>
+
+
+
+
+
+    <div class="torph-container" style="width:400px;height:600px">
+
+
+        <div class="torph-page" data-index="0" style="visibility:visible" data-animation-easing="Back.easeOut" data-transition-duration="0">
+            <staggergroup data-animation-name="circles" data-animation-type="fall-right"></staggergroup>
+            
+            
+            <div data-animation-stagger-group="circles" class="circle"></div>
+            <div data-animation-stagger-group="circles" class="circle"></div>
+            <div data-animation-stagger-group="circles" class="circle"></div>
+            <div data-animation-stagger-group="circles" class="circle"></div>
+            <div data-animation-stagger-group="circles" class="circle"></div>
+            <div data-animation-stagger-group="circles" class="circle"></div>
+            
+        
+
+        </div>
+
+        <div class="torph-page" data-index="1" data-animation-easing="Back.easeOut" data-transition-type="move-left-right" data-transition-duration="0">
+            
+            
+        </div>
+
+
+
+    </div>
+
+    <div style="position:absolute;bottom:0">
+        <button onclick="forward()">Forward</button>
+        <button onclick="backward()">Backward</button>
+    </div>
+
+
+
+
+    <script src="demo-6.js"></script>
+</body>
+
+</html>

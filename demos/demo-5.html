@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torph Demo 1</title>
+
+    <link rel="stylesheet" href="../torph.css">
+    <link rel="stylesheet" href="demo-1.css">
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/TweenMax.min.js"></script>
+    <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/plugins/CSSRulePlugin.min.js"></script>-->
+    <script src="../torph.js"></script>
+</head>
+
+<body>
+
+
+
+    <div class="torph-container">
+
+        <!--PAGE 1 -->
+        <div class="torph-page" data-index="0" style="visibility:visible;background:#00ff00" 
+             data-animation-page="cube-vertical"
+             data-animation-page-properties = "ease:Back.easeOut;duration:0.6">
+            
+        </div>
+
+        <!--PAGE 2 -->
+        <div class="torph-page" style="background:#0000ff" data-index="1" 
+             data-animation-easing="Back.easeOut"
+             data-animation-page="cube-vertical">
+            
+        </div>
+
+
+
+    </div>
+    
+    
+    <div style="position:absolute;bottom:0">
+        <button onclick="forward()">Forward</button>
+        <button onclick="backward()">Backward</button>
+    </div>
+
+
+
+
+
+    <script src="demo-5.js"></script>
+</body>
+
+</html>

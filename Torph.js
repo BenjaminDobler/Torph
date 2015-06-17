@@ -1,6 +1,32 @@
 window.Torph = (function () {
 
 
+
+    function extend(obj, props) {
+        var newobj = {};
+
+        for (var prop in obj) {
+            if (obj.hasOwnProperty(prop)) {
+                newobj[prop] = obj[prop];
+            }
+        }
+
+        for (var prop in props) {
+            if (props.hasOwnProperty(prop)) {
+                newobj[prop] = props[prop];
+            }
+        }
+        return newobj;
+    }
+
+    function merge(from, to) {
+        for (var i in from) {
+            to[i] = from[i];
+        }
+    }
+
+
+
     // Micro event taken from here: https://github.com/jeromeetienne/microevent.js
     /**
      * MicroEvent - to make any js object an event emitter (server or browser)
@@ -208,74 +234,6 @@ window.Torph = (function () {
         this.transitionFunctions = {};
         this.pauseOnTransitionStart = false;
 
-        function moveLeftRight(fromIndex, toIndex) {
-            var containerWidth = parseInt(window.getComputedStyle(container).width);
-            var fromPageStartValues = {
-                x: 0
-            };
-            var fromPageEndValues = {
-                x: -containerWidth
-            };
-            var toPageStartValues = {
-                x: containerWidth
-            };
-            var toPageEndValues = {
-                x: 0
-            };
-
-            if (fromIndex > toIndex) {
-                toPageStartValues.x = -containerWidth;
-            }
-
-            if (fromIndex > toIndex) {
-                fromPageEndValues.x = containerWidth;
-            }
-
-            return {
-                fromPageStartValues: fromPageStartValues,
-                fromPageEndValues: fromPageEndValues,
-                toPageStartValues: toPageStartValues,
-                toPageEndValues: toPageEndValues
-            }
-
-        }
-        this.transitionFunctions['move-left-right'] = moveLeftRight;
-
-        function moveTopBottom(fromIndex, toIndex, container) {
-            var containerHeight = parseInt(window.getComputedStyle(container).height);
-            var fromPageStartValues = {
-                y: 0
-            };
-            var fromPageEndValues = {
-                y: -containerHeight
-            };
-            var toPageStartValues = {
-                y: containerHeight
-            };
-            var toPageEndValues = {
-                y: 0
-            };
-
-            if (fromIndex > toIndex) {
-                toPageStartValues.y = -containerHeight;
-            }
-
-            if (fromIndex > toIndex) {
-                fromPageEndValues.y = containerHeight;
-            }
-
-            return {
-                fromPageStartValues: fromPageStartValues,
-                fromPageEndValues: fromPageEndValues,
-                toPageStartValues: toPageStartValues,
-                toPageEndValues: toPageEndValues
-            }
-
-        }
-
-        this.transitionFunctions['move-top-bottom'] = moveTopBottom;
-
-
 
         function fadeInOut(fromIndex, toIndex, container) {
             var fromPageStartValues = {
@@ -303,6 +261,316 @@ window.Torph = (function () {
 
         this.transitionFunctions['fadeInOut'] = fadeInOut;
 
+
+
+
+        this.pageAnimations = {};
+        this.pageAnimations['move-horizontal'] = function (type, from, to, properties) {
+            var containerWidth = parseInt(window.getComputedStyle(self.container).width);
+            var fromIndex = from.getAttribute('data-index');
+            var toIndex = to.getAttribute('data-index');
+            var mu = 1;
+            if (fromIndex > toIndex) {
+                mu = -1;
+            }
+            console.log(mu);
+
+            var duration = 0.3;
+            if (properties && properties.duration) {
+                duration = Number(properties.duration);
+            }
+            if (type === "in") {
+                var targetProps = {
+                    x: 0
+                };
+                merge(properties, targetProps);
+                console.log("Target Props ", targetProps);
+
+                self.transitionTimeline.fromTo(to, duration, {
+                    x: -containerWidth * mu
+                }, targetProps, 0);
+            }
+
+            if (type === "out") {
+                self.transitionTimeline.fromTo(from, duration, {
+                    x: 0
+                }, {
+                    x: containerWidth * mu
+                }, 0);
+            }
+        }
+
+
+        this.pageAnimations['move-vertical'] = function (type, from, to) {
+            var containerHeight = parseInt(window.getComputedStyle(self.container).height);
+            var fromIndex = from.getAttribute('data-index');
+            var toIndex = to.getAttribute('data-index');
+            var mu = 1;
+            if (fromIndex > toIndex) {
+                mu = -1;
+            }
+            console.log(mu);
+            if (type === "in") {
+                self.transitionTimeline.fromTo(to, 0.3, {
+                    y: -containerHeight * mu
+                }, {
+                    y: 0
+                }, 0);
+            }
+
+            if (type === "out") {
+                self.transitionTimeline.fromTo(from, 0.3, {
+                    y: 0
+                }, {
+                    y: containerHeight * mu
+                }, 0);
+            }
+        }
+
+        this.pageAnimations['cube-vertical'] = function (type, from, to) {
+            var containerHeight = parseInt(window.getComputedStyle(self.container).height);
+            var fromIndex = from.getAttribute('data-index');
+            var toIndex = to.getAttribute('data-index');
+            var mu = 1;
+            if (fromIndex > toIndex) {
+                mu = -1;
+            }
+
+            TweenMax.set(self.container, {
+                perspective: 800
+            });
+            console.log(mu);
+
+            if (fromIndex < toIndex) {
+                if (type === "in") {
+
+                    var onFirstPhase = function () {
+                        to.style['z-index'] = 3;
+
+                    }
+
+                    var zMiddle = -200;
+                    TweenMax.set(to, {
+                        transformOrigin: "100% 50%",
+                        "z-index": 1
+                    });
+                    self.transitionTimeline.fromTo(to, 0.6, {
+                        x: "-100%",
+                        rotationY: -90,
+                        z: 0
+                    }, {
+                        x: "-50%",
+                        rotationY: -45,
+                        z: -200,
+                        onComplete: onFirstPhase
+                    }, 0);
+                    self.transitionTimeline.fromTo(to, 0.6, {
+                        x: "-50%",
+                        rotationY: -45,
+                        z: -200
+                    }, {
+                        x: "0%",
+                        rotationY: 0,
+                        z: 0
+                    }, 0.6);
+
+                }
+                if (type === "out") {
+                    TweenMax.set(from, {
+                        transformOrigin: "0% 0%",
+                        "z-index": 2
+                    });
+                    //self.transitionTimeline.fromTo(from, 0.3, {y:0}, {y:containerHeight*mu}, 0);
+                    self.transitionTimeline.fromTo(from, 0.6, {
+                        x: 0
+                    }, {
+                        x: "50%",
+                        rotationY: 45,
+                        z: -200
+                    }, 0);
+                    self.transitionTimeline.fromTo(from, 0.6, {
+                        x: 0
+                    }, {
+                        x: "100%",
+                        z: 0,
+                        rotationY: 90
+                    }, 0.6);
+                }
+
+            } else {
+
+                if (type === "in") {
+
+                    var onFirstPhase = function () {
+                        to.style['z-index'] = 3;
+
+                    }
+
+                    var zMiddle = -200;
+                    TweenMax.set(to, {
+                        transformOrigin: "0% 50%",
+                        "z-index": 1
+                    });
+                    self.transitionTimeline.fromTo(to, 0.6, {
+                        x: "100%",
+                        rotationY: 90,
+                        z: 0
+                    }, {
+                        x: "50%",
+                        rotationY: 45,
+                        z: -200,
+                        onComplete: onFirstPhase
+                    }, 0);
+                    self.transitionTimeline.fromTo(to, 0.6, {
+                        x: "50%",
+                        rotationY: 45,
+                        z: -200
+                    }, {
+                        x: "0%",
+                        rotationY: 0,
+                        z: 0
+                    }, 0.6);
+
+                }
+                if (type === "out") {
+                    TweenMax.set(from, {
+                        transformOrigin: "100% 0%",
+                        "z-index": 2
+                    });
+                    //self.transitionTimeline.fromTo(from, 0.3, {y:0}, {y:containerHeight*mu}, 0);
+                    self.transitionTimeline.fromTo(from, 0.6, {
+                        x: 0
+                    }, {
+                        x: "-50%",
+                        rotationY: -45,
+                        z: -200
+                    }, 0);
+                    self.transitionTimeline.fromTo(from, 0.6, {
+                        x: 0
+                    }, {
+                        x: "-100%",
+                        z: 0,
+                        rotationY: -90
+                    }, 0.6);
+                }
+            }
+
+
+
+
+        }
+
+
+
+        this.pageAnimations['flip-horizontal'] = function (type, from, to) {
+            var containerHeight = parseInt(window.getComputedStyle(self.container).height);
+            var fromIndex = from.getAttribute('data-index');
+            var toIndex = to.getAttribute('data-index');
+            var mu = 1;
+            if (fromIndex > toIndex) {
+                mu = -1;
+            }
+
+            TweenMax.set(self.container, {
+                perspective: 800
+            });
+            TweenMax.set(from, {
+                "backface-visibility": "hidden"
+            });
+            TweenMax.set(to, {
+                "backface-visibility": "hidden"
+            });
+
+
+            self.transitionTimeline.fromTo(from, 0.6, {
+                rotationY: 0
+            }, {
+                rotationY: 180 * mu
+            }, 0);
+            self.transitionTimeline.to(from, 0.3, {
+                z: -500
+            }, 0);
+            self.transitionTimeline.to(from, 0.3, {
+                z: 0
+            }, 0.3);
+            self.transitionTimeline.fromTo(to, 0.6, {
+                rotationY: -180 * mu
+            }, {
+                rotationY: 0
+            }, 0);
+            self.transitionTimeline.to(to, 0.3, {
+                z: -500
+            }, 0);
+            self.transitionTimeline.to(to, 0.3, {
+                z: 0
+            }, 0.3);
+
+        }
+
+
+        this.pageAnimations['flip-vertical'] = function (type, from, to) {
+            var containerHeight = parseInt(window.getComputedStyle(self.container).height);
+            var fromIndex = from.getAttribute('data-index');
+            var toIndex = to.getAttribute('data-index');
+            var mu = 1;
+            if (fromIndex > toIndex) {
+                mu = -1;
+            }
+
+            TweenMax.set(self.container, {
+                perspective: 800
+            });
+            TweenMax.set(from, {
+                "backface-visibility": "hidden"
+            });
+            TweenMax.set(to, {
+                "backface-visibility": "hidden"
+            });
+
+
+            self.transitionTimeline.fromTo(from, 0.6, {
+                rotationX: 0
+            }, {
+                rotationX: 180 * mu
+            }, 0);
+            self.transitionTimeline.to(from, 0.3, {
+                z: -500
+            }, 0);
+            self.transitionTimeline.to(from, 0.3, {
+                z: 0
+            }, 0.3);
+            self.transitionTimeline.fromTo(to, 0.6, {
+                rotationX: -180 * mu
+            }, {
+                rotationX: 0
+            }, 0);
+            self.transitionTimeline.to(to, 0.3, {
+                z: -500
+            }, 0);
+            self.transitionTimeline.to(to, 0.3, {
+                z: 0
+            }, 0.3);
+
+        }
+
+
+        this.staggerAnimations = [];
+        this.staggerAnimations['scale'] = {
+            scale: 0,
+            opacity: 0
+        }
+
+        this.staggerAnimations['fall-down'] = {
+            yPercent: 600,
+            scale: 0.8,
+            opacity: 0
+        }
+        
+        this.staggerAnimations['fall-right'] = {
+            xPercent: 600,
+            scale: 0.8,
+            opacity: 0
+        }
 
     }
 
@@ -372,9 +640,9 @@ window.Torph = (function () {
                 // NOTE: Kind of bad cause it prevents inline styles on animated objects as they will be erased after each run.
                 // Would be nicer to only clear styles set by the tween...
                 //TweenMax.set(tween.target,{clearProps:"all"});
-
+                console.log("Reset ", tween);
                 TweenMax.set(tween.target, {
-                    clearProps: "opacity,transform"
+                    clearProps: "opacity, transform"
                 });
             }
 
@@ -388,71 +656,16 @@ window.Torph = (function () {
 
         // Page Transition
 
-        var fromPageDelay = fromPage.getAttribute('data-animation-delay') || 0;
-        var toPageDelay = fromPage.getAttribute('data-animation-delay') || 0;
-
-
-        var fromTransitionType = fromPage.getAttribute('data-transition-type') || 'move-left-right';
-        var fromTransitionDuration = fromPage.getAttribute('data-transition-duration') || 0.8;
-        var toTransitionType = toPage.getAttribute('data-transition-type') || 'move-left-right';
-        var toTransitionDuration = toPage.getAttribute('data-transition-duration') || 0.8;
-
-        var fromPageTransitionProperties = this.transitionFunctions[fromTransitionType](fromIndex, toIndex, container);
-        var toPageTransitionProperties = this.transitionFunctions[toTransitionType](fromIndex, toIndex, container);
-
-        var toEaseFunc = this.getEasingClass(toPage, 'data-animation-easing');
-        if (toEaseFunc) {
-            toPageTransitionProperties.toPageEndValues.ease = toEaseFunc;
+        var toPageAnimaton = toPage.getAttribute('data-animation-page');
+        if (toPageAnimaton) {
+            var properties = this.parseProperties(toPage, 'data-animation-properties');
+            this.pageAnimations[toPageAnimaton]("in", fromPage, toPage, properties);
         }
-
-        var fromEaseFunc = this.getEasingClass(fromPage, 'data-animation-easing');
-        if (fromEaseFunc) {
-            fromPageTransitionProperties.fromPageEndValues.ease = fromEaseFunc;
+        var fromPageAnimation = fromPage.getAttribute('data-animation-page');
+        if (fromPageAnimation) {
+            var properties = this.parseProperties(fromPage, 'data-animation-properties');
+            this.pageAnimations[fromPageAnimation]("out", fromPage, toPage);
         }
-
-        if (toTransitionDuration === 0 || toTransitionDuration === "0") {
-            /*
-            self.toPageTransitionDone = true;
-            console.log("All Done");
-            for(var i=0;i<self.cleanUpAfterToPageDone.length;i++) {
-                var data = self.cleanUpAfterToPageDone[i];
-                console.log("Clean at end");
-                cleanupElementTranisiton(data);
-            }
-            */
-        } else {
-            /*
-            toPageTransitionProperties.toPageEndValues.onComplete = function () {
-                self.toPageTransitionDone = true;
-                console.log("All Done");
-                for(var i=0;i<self.cleanUpAfterToPageDone.length;i++) {
-                    var data = self.cleanUpAfterToPageDone[i];
-                    console.log("Clean at end");
-                    cleanupElementTranisiton(data);
-                }
-            }
-            */
-        }
-
-
-
-
-        if (toTransitionDuration === 0 || toTransitionDuration === "0") {
-            TweenMax.set(toPage, toPageTransitionProperties.toPageEndValues);
-        } else {
-            this.transitionTimeline.fromTo(toPage, toTransitionDuration, toPageTransitionProperties.toPageStartValues, toPageTransitionProperties.toPageEndValues, toPageDelay);
-
-        }
-
-        if (fromTransitionDuration === 0 || fromTransitionDuration === "0") {
-            //TweenMax.set(fromPage, fromPageTransitionProperties.fromPageEndValues)
-        } else {
-            this.transitionTimeline.fromTo(fromPage, fromTransitionDuration, fromPageTransitionProperties.fromPageStartValues, fromPageTransitionProperties.fromPageEndValues, fromPageDelay);
-
-        }
-
-
-
 
         // Individual Element transitions (fadeIn/fadeOut... no element to element trasitions)
         var outAnimations = fromPage.querySelectorAll('*[data-animation-out]');
@@ -568,7 +781,8 @@ window.Torph = (function () {
     Torph.prototype.animateStaggerGroup = function (page, group, type) {
         var self = this;
         var groupName = group.getAttribute('data-animation-name');
-        var elements = page.querySelectorAll('[data-animation-stagger-group="albums"]');
+        var animationType = group.getAttribute('data-animation-type');
+        var elements = page.querySelectorAll('[data-animation-stagger-group="' + groupName + '"]');
         var filteredElements = [];
         for (var i = 0; i < elements.length; i++) {
             var element = elements[i];
@@ -577,48 +791,62 @@ window.Torph = (function () {
             }
         }
         elements = filteredElements;
+        
+        
         var delay = 0.4;
         var delayStep = 0.4 / elements.length;
 
         function onStaggerComplete(tween) {
             self.tweensToReset.push(tween);
         }
+        var reverse = false;
 
+        var transitionName = "from";
         if (!type || type === "out") {
-            for (var y = 0; y < elements.length; y++) {
-                var element = elements[y];
-                delay = 0.4 - (y * delayStep);
-                this.transitionTimeline.to(element, 0.6, {
-                    yPercent: 600,
-                    scale: 0.8,
-                    opacity: 0,
-                    ease: Sine.easeOut,
-                    force3D: true,
-                    onComplete: onStaggerComplete,
-                    onCompleteParams: ["{self}"]
-                }, delay);
-            }
+            transitionName = "to"; 
         } else {
-            var delay = 0;
-            var delayStep = 0.4 / elements.length;
-            for (var y = 0; y < elements.length; y++) {
-                var element = elements[y];
-                self.transitionTimeline.from(element, 0.6, {
-                    yPercent: 600,
-                    scale: 0.8,
-                    opacity: 0,
-                    ease: Sine.easeOut,
-                    force3D: true,
-                    onComplete: onStaggerComplete,
-                    onCompleteParams: ["{self}"]
-                }, delay);
-                delay = y * delayStep;
-
-            }
-
-
+            filteredElements = filteredElements.reverse();
         }
 
+        var transitionProperties = {
+            ease: Sine.easeOut,
+            force3D: true,
+            onComplete: onStaggerComplete,
+            onCompleteParams: ["{self}"]
+        };
+
+        for (var y = 0; y < elements.length; y++) {
+            var element = elements[y];
+            if (!reverse) {
+                delay = 0.4 - (y * delayStep);
+            } else {
+                delay = y * delayStep;
+            }
+            var p = extend(transitionProperties, this.staggerAnimations[animationType]);
+            this.transitionTimeline[transitionName](element, 0.6, p, delay);
+        }
+    }
+
+
+    Torph.prototype.parseProperties = function (element, attributeName) {
+        var attributeValue = element.getAttribute(attributeName);
+        var properties = {};
+        if (attributeValue) {
+            var s = attributeValue.split(";");
+            for (var i = 0; i < s.length; i++) {
+                var d = s[i].split(":");
+                var value = d[1];
+                var name = d[0];
+                if (name == "delay") {
+                    value = parseInt(value);
+                }
+                if (name == "ease") {
+                    value = this.easingStringToFunction(value);
+                }
+                properties[name] = value;
+            }
+        }
+        return properties;
     }
 
 
@@ -632,6 +860,21 @@ window.Torph = (function () {
                 classPath = classPath[part];
             });
         }
+        return classPath;
+
+    }
+
+
+    Torph.prototype.easingStringToFunction = function (easingString) {
+        // This seems like a very stupid way to do window['Back']['easeOut']
+        var classPath;
+        console.log("String ", easingString);
+        var arr = easingString.split('.');
+        classPath = window;
+        arr.forEach(function (part) {
+            classPath = classPath[part];
+        });
+
         return classPath;
 
     }
@@ -701,6 +944,7 @@ window.Torph = (function () {
 
     Torph.prototype.morph = function (fromNode, toNode) {
         var self = this;
+        console.log("Morph ", fromNode);
         var container = this.container;
         var stylesToApplyToTarget = fromNode.getAttribute('data-animation-copy-style');
         if (stylesToApplyToTarget) {
@@ -804,7 +1048,6 @@ window.Torph = (function () {
         var destinationRadius2 = targetRadius2 * (toWidth / fromWidth);
 
 
-        //alert(destinationRadius);
 
         TweenMax.set(toClone, {
             transformOrigin: "0% 0%",
@@ -815,7 +1058,6 @@ window.Torph = (function () {
             'border-radius': destinationRadius2 + "px" //fromComputedStyles["border-radius"]
         });
 
-        console.log("X " + Number(toNodeBoundingBox.top - fromNodeBoundingBox.top));
         var properties = {
             x: toNodeBoundingBox.left - fromNodeBoundingBox.left,
             y: toNodeBoundingBox.top - fromNodeBoundingBox.top,
@@ -829,10 +1071,8 @@ window.Torph = (function () {
         }
 
 
-        console.log("To Styles", toComputedStyles);
         var toBorderRadius = toComputedStyles["border-radius"];
         var borderLeft = toComputedStyles["border-bottom-left-radius"];
-        console.log("Border Radius " + toBorderRadius + "   " + borderLeft);
 
         var destinationProperties = {
             x: 0,
